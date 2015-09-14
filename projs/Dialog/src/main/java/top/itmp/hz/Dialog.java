@@ -31,6 +31,8 @@ public class Dialog extends Activity
 
              final String[] arrayCity = new String[] { "杭州", "纽约", "威尼斯", "北海道" };
 
+     final String[] arraySport = new String[] { "足球", "篮球", "网球", "乒乓球" };
+    final boolean[] arraySportSelected = new boolean[] {false, false, false, false};
 
         bt1 =  (Button)super.findViewById(R.id.button1);
         bt2 =  (Button)super.findViewById(R.id.button2);
@@ -90,12 +92,11 @@ public class Dialog extends Activity
                     }
                 }).setNegativeButton("取消", new DialogInterface.OnClickListener(){
     public void onClick(DialogInterface dialog, int which) {
-                            Toast.makeText(getApplicationContext(), arrayCity[which], Toast.LENGTH_SHORT).show();
-                        selectedCityIndex = which;
+                            Toast.makeText(getApplicationContext(), arrayCity[selectedCityIndex], Toast.LENGTH_SHORT).show();
 }
 }).setPositiveButton("确认", new DialogInterface.OnClickListener(){
     public void onClick(DialogInterface dialog, int which){
-                            Toast.makeText(getApplicationContext(), arrayCity[which], Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), arrayCity[selectedCityIndex], Toast.LENGTH_SHORT).show();
 }
 }).create().show();
 
@@ -104,7 +105,41 @@ public class Dialog extends Activity
         });
         bt4.setOnClickListener(new OnClickListener(){
                 public void onClick(View v){
+                     new AlertDialog.Builder(Dialog.this)
+       .setTitle("你喜欢哪些运动？")                        //设置标题
+       .setIcon(R.drawable.ic_launcher)               //设置图标
+       //设置对话框显示一个复选List，指定默认选中项，同时设置监听事件处理
+       .setMultiChoiceItems(arraySport, arraySportSelected, new DialogInterface.OnMultiChoiceClickListener() {
 
+           @Override
+           public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+               arraySportSelected[which] = isChecked;              //选中项的布尔真假保存到选中项变量
+           }
+       })
+       //添加取消按钮并增加监听处理
+       .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+
+           @Override
+           public void onClick(DialogInterface dialog, int which) {
+              StringBuilder stringBuilder = new StringBuilder();
+              for (int i = 0; i < arraySportSelected.length; i++) {
+              if (arraySportSelected[i] == true){
+                  stringBuilder.append(arraySport[i] + "、");
+              }
+           }
+           Toast.makeText(getApplication(), stringBuilder.toString(), Toast.LENGTH_SHORT).show();
+         }
+        })
+
+        //添加确定按钮并增加监听处理
+       .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+           @Override
+           public void onClick(DialogInterface dialog, int which) {
+               // TODO Auto-generated method stub
+           }
+        })
+       .create().show();
                 }
         });
     }
